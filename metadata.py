@@ -1,6 +1,6 @@
 import uuid
 from dataclasses import dataclass, field
-from tyoing import Dict, Any, Optional
+from typing import Dict, Any, Optional
 
 {
     "capture_id": "UUID",
