@@ -1,3 +1,7 @@
+import uuid
+from dataclasses import dataclass, field
+from tyoing import Dict, Any, Optional
+
 {
     "capture_id": "UUID",
 
@@ -351,6 +355,16 @@ class FFmpegInfo:
 # ============================================================
 # Root Metadata Object
 # ============================================================
+@dataclass
+class ProcessingStatus:
+    captured: bool = True
+    validated: bool = False
+    annotated: bool = False
+    music_detected: bool = False
+    separated: bool = False
+    fingerprinted: bool = False
+    matched: bool = False
+    published: bool = False
 
 @dataclass
 class GRMSMetadata:
@@ -395,3 +409,5 @@ class GRMSMetadata:
     )
 
     ffmpeg: FFmpegInfo = field(default_factory=FFmpegInfo)
+
+    processing_status: ProcessingStatus = field(default_factory=ProcessingStatus)
