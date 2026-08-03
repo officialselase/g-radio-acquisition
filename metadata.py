@@ -411,3 +411,187 @@ class GRMSMetadata:
     ffmpeg: FFmpegInfo = field(default_factory=FFmpegInfo)
 
     processing_status: ProcessingStatus = field(default_factory=ProcessingStatus)
+    # ============================================================
+# Processing Status
+# ============================================================
+
+@dataclass
+class ProcessingStatus:
+    """
+    Tracks where this recording is within the
+    Rob-GhanaRadio research pipeline.
+    """
+
+    captured: bool = True
+
+    validated: bool = False
+
+    annotated: bool = False
+
+    music_detected: bool = False
+
+    source_separated: bool = False
+
+    fingerprint_generated: bool = False
+
+    fingerprint_matched: bool = False
+
+    benchmarked: bool = False
+
+    archived: bool = False
+
+    published: bool = False
+
+
+# ------------------------------------------------------------
+# Attach ProcessingStatus to Root Metadata
+# ------------------------------------------------------------
+
+GRMSMetadata.__annotations__["processing_status"] = ProcessingStatus
+GRMSMetadata.processing_status = field(default_factory=ProcessingStatus)
+
+
+# ============================================================
+# Metadata Builder
+# ============================================================
+
+class MetadataBuilder:
+    """
+    Builds GRMS metadata objects.
+
+    Usage
+
+        builder = MetadataBuilder()
+
+        metadata = builder.build(...)
+    """
+
+    def __init__(self):
+
+        self.ffmpeg = ffmpeg_version()
+
+    # --------------------------------------------------------
+
+    def build(
+
+        self,
+
+        station_name: str,
+
+        stream_url: str,
+
+        audio_file: Path,
+
+        capture_start: datetime,
+
+        capture_end: datetime,
+
+        language: Optional[List[str]] = None,
+
+        city: Optional[str] = None,
+
+        owner: Optional[str] = None,
+
+        genre: Optional[str] = None,
+
+        segment_number: int = 1,
+
+    ) -> GRMSMetadata:
+
+        if language is None:
+
+            language = []
+
+        metadata = GRMSMetadata()
+
+        # ----------------------------------------------------
+        # Station
+        # ----------------------------------------------------
+
+        metadata.station.name = station_name
+
+        metadata.station.stream_url = stream_url
+
+        metadata.station.language = language
+
+        metadata.station.city = city
+
+        metadata.station.owner = owner
+
+        metadata.station.genre = genre
+
+        # ----------------------------------------------------
+        # Capture
+        # ----------------------------------------------------
+
+        metadata.capture.start_time = capture_start.isoformat()
+
+        metadata.capture.end_time = capture_end.isoformat()
+
+        metadata.capture.duration_seconds = (
+            capture_end - capture_start
+        ).total_seconds()
+
+        metadata.capture.utc_time = datetime.utcnow().isoformat()
+
+        metadata.capture.segment_number = segment_number
+
+        metadata.capture.sequence = {
+            "index": 381,
+            "previous": "...uuid...",
+            "next": "...uuid..."
+}
+
+        # ----------------------------------------------------
+        # File
+        # ----------------------------------------------------
+
+        metadata.file.filename = audio_file.name
+
+        metadata.file.extension = audio_file.suffix
+
+        metadata.file.absolute_path = str(
+            audio_file.resolve()
+        )
+
+        metadata.file.size_bytes = file_size(audio_file)
+
+        metadata.file.sha256 = sha256(audio_file)
+
+        metadata.file.md5 = md5(audio_file)
+
+        # ----------------------------------------------------
+        # Audio
+        # ----------------------------------------------------
+
+        audio = audio_properties(audio_file)
+
+        metadata.audio.codec = audio.get("codec")
+
+        metadata.audio.sample_rate = audio.get("sample_rate")
+
+        metadata.audio.channels = audio.get("channels")
+
+        metadata.audio.bit_rate = audio.get("bit_rate")
+
+        metadata.audio.container = audio.get("container")
+
+        metadata.audio.duration = audio.get("duration")
+
+        # ----------------------------------------------------
+        # FFmpeg
+        # ----------------------------------------------------
+
+        metadata.ffmpeg.version = self.ffmpeg
+
+        metadata.ffmpeg.ffprobe_version = self.ffmpeg
+
+        metadata.ffmpeg.capture_method = "Stream Copy"
+
+        # ----------------------------------------------------
+        # System
+        # ----------------------------------------------------
+
+        metadata.system = system_information()
+
+        return metadata
