@@ -1,0 +1,172 @@
+{
+  "capture_id": "5aef2008-5b2c-4d63-a361-cfbe9e57e359",
+  "dataset": {
+    "name": "G-Radio",
+    "version": "1.0",
+    "country": "Ghana",
+    "timezone": "Africa/Accra",
+    "license": "Research Only"
+  },
+  "framework": {
+    "name": "G-Radio Acquisition Framework",
+    "version": "1.0.0"
+  },
+  "station": {
+    "id": "",
+    "name": "Peace FM",
+    "stream_url": "",
+    "broadcast_type": "FM",
+    "frequency": null,
+    "city": null,
+    "region": null,
+    "country": "Ghana",
+    "language": [],
+    "genre": null,
+    "owner": null
+  },
+  "capture": {
+    "start_time": "",
+    "end_time": "",
+    "utc_time": "2026-08-03T22:35:55.683163+00:00",
+    "duration_seconds": 0.0,
+    "segment_number": 1,
+    "sequence": {
+      "index": 1,
+      "previous": null,
+      "next": null
+    }
+  },
+  "audio": {
+    "codec": "",
+    "sample_rate": 0,
+    "channels": 0,
+    "bit_rate": 0,
+    "container": "mp3",
+    "duration": 0.0
+  },
+  "file": {
+    "filename": "peace_fm_test.mp3",
+    "extension": ".mp3",
+    "absolute_path": "",
+    "size_bytes": 0,
+    "sha256": "",
+    "md5": ""
+  },
+  "annotation": {
+    "annotated": false,
+    "annotation_version": "1.0",
+    "annotator": null,
+    "reviewer": null,
+    "reviewed": false,
+    "annotation_date": null,
+    "confidence": null,
+    "quality_score": null,
+    "notes": null,
+    "primary_language": null,
+    "secondary_language": null,
+    "program_type": null,
+    "contains_music": true,
+    "contains_speech": true,
+    "contains_advertisement": null,
+    "contains_news": null,
+    "contains_jingle": null,
+    "contains_phone_call": null,
+    "contains_applause": null,
+    "contains_laughter": null,
+    "contains_live_event": null,
+    "contains_background_noise": null,
+    "contains_silence": null
+  },
+  "interference": {
+    "presenter_over_music": true,
+    "multiple_speakers": null,
+    "caller_audio": null,
+    "advertisement_overlay": null,
+    "station_jingle_overlay": null,
+    "crossfade": null,
+    "background_music": null,
+    "crowd_noise": null,
+    "vehicle_noise": null,
+    "microphone_noise": null,
+    "microphone_clipping": null,
+    "echo": null,
+    "reverb": null,
+    "compression_artifacts": null,
+    "packet_loss": null,
+    "signal_dropout": null,
+    "signal_distortion": null,
+    "simultaneous_music": null,
+    "interference_score": null
+  },
+  "fingerprinting": {
+    "reference_song": null,
+    "artist": null,
+    "album": null,
+    "label": null,
+    "genre": null,
+    "is_ground_truth": false,
+    "ground_truth_start": null,
+    "ground_truth_end": null,
+    "matched": false,
+    "matched_song": null,
+    "matched_artist": null,
+    "match_confidence": null,
+    "embedding_id": "15dc8e2a-8dd6-435b-9013-7745537d4771",
+    "embedding_dimension": 128,
+    "top5_candidates": []
+  },
+  "machine_learning": {
+    "dataset_split": null,
+    "fold": null,
+    "excluded": false,
+    "exclusion_reason": null,
+    "speech_music_ratio": 1.18,
+    "estimated_snr": null,
+    "music_detector_score": 0.85,
+    "speech_detector_score": 0.72,
+    "source_separation_model": "Demucs-v4-GhanaRadio",
+    "fingerprint_model": "NeuralFingerprint-v1",
+    "embedding_generated": true,
+    "embedding_path": null,
+    "notes": null
+  },
+  "provenance": {
+    "dataset_release": "v1.0",
+    "metadata_version": "GRMS-1.0",
+    "generated_by": "GRAF",
+    "generated_on": "2026-08-03T22:35:55.686522+00:00",
+    "verified": false,
+    "verification_date": null,
+    "verification_method": null
+  },
+  "system": {
+    "os_name": "Darwin",
+    "os_release": "24.1.0",
+    "os_version": "Darwin Kernel Version 24.1.0: Thu Oct 10 21:02:27 PDT 2024; root:xnu-11215.41.3~2/RELEASE_X86_64",
+    "architecture": "x86_64",
+    "processor": "i386",
+    "python_version": "3.13.0",
+    "python_implementation": "CPython",
+    "hostname": "Samas-MBP",
+    "ffmpeg_binary": "/usr/local/bin/ffmpeg",
+    "ffprobe_binary": "/usr/local/bin/ffprobe"
+  },
+  "ffmpeg": {
+    "version": "",
+    "ffprobe_version": "",
+    "command": "",
+    "capture_method": "Stream Copy"
+  },
+  "processing_status": {
+    "captured": true,
+    "validated": false,
+    "annotated": false,
+    "music_detected": true,
+    "source_separated": true,
+    "fingerprint_generated": true,
+    "fingerprint_matched": false,
+    "benchmarked": true,
+    "archived": false,
+    "published": false
+  }
+}

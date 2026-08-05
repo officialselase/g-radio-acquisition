@@ -1,261 +1,71 @@
 """
 ==============================================================
 G-Radio Acquisition Framework (GRAF)
-Configuration File
+Configuration File (Top-level Wrapper)
 
 Author : Selase K. Agbai
 Project: Rob-GhanaRadio
-Purpose: Central configuration for dataset acquisition.
-
-This file should contain ALL configurable parameters used by
-the framework.
-
-No other module should hardcode paths or recording settings.
-
 ==============================================================
 """
 
-from pathlib import Path
-import multiprocessing
+from graf.config import config, GRAFConfig, PathConfig, AudioConfig, FFmpegConfig
 
-# ============================================================
-# PROJECT INFORMATION
-# ============================================================
+# Backwards compatibility top-level constants
+PROJECT_NAME = config.dataset.project_name
+PROJECT_VERSION = config.dataset.project_version
+DATASET_NAME = config.dataset.dataset_name
+DATASET_VERSION = config.dataset.dataset_version
+COUNTRY = config.dataset.country
+TIMEZONE = config.dataset.timezone
 
-PROJECT_NAME = "G-Radio Acquisition Framework"
-
-PROJECT_VERSION = "1.0.0"
-
-DATASET_NAME = "G-Radio"
-
-COUNTRY = "Ghana"
-
-TIMEZONE = "Africa/Accra"
-
-# ============================================================
-# STORAGE DIRECTORIES
-# ============================================================
-
-BASE_DIR = Path(__file__).resolve().parent
-
-STORAGE_DIR = BASE_DIR / "storage"
-
-RAW_AUDIO_DIR = STORAGE_DIR / "raw"
-
-METADATA_DIR = STORAGE_DIR / "metadata"
-
-LOG_DIR = STORAGE_DIR / "logs"
-
-REPORT_DIR = STORAGE_DIR / "reports"
-
-FAILED_DIR = STORAGE_DIR / "failed"
-
-CACHE_DIR = STORAGE_DIR / "cache"
-
-ANNOTATION_DIR = STORAGE_DIR / "annotations"
-
-TEMP_DIR = STORAGE_DIR / "temp"
-
-# ============================================================
-# AUTOMATIC DIRECTORY CREATION
-# ============================================================
+BASE_DIR = config.paths.base_dir
+STORAGE_DIR = config.paths.storage_dir
+RAW_AUDIO_DIR = config.paths.raw_audio_dir
+METADATA_DIR = config.paths.metadata_dir
+LOG_DIR = config.paths.log_dir
+REPORT_DIR = config.paths.report_dir
+FAILED_DIR = config.paths.failed_dir
+CACHE_DIR = config.paths.cache_dir
+ANNOTATION_DIR = config.paths.annotation_dir
+TEMP_DIR = config.paths.temp_dir
+STATIONS_FILE = config.paths.stations_file
 
 DIRECTORIES = [
-
-    STORAGE_DIR,
-
-    RAW_AUDIO_DIR,
-
-    METADATA_DIR,
-
-    LOG_DIR,
-
-    REPORT_DIR,
-
-    FAILED_DIR,
-
-    CACHE_DIR,
-
-    ANNOTATION_DIR,
-
-    TEMP_DIR
-
+    STORAGE_DIR, RAW_AUDIO_DIR, METADATA_DIR, LOG_DIR,
+    REPORT_DIR, FAILED_DIR, CACHE_DIR, ANNOTATION_DIR, TEMP_DIR
 ]
 
-# ============================================================
-# STATION CONFIGURATION
-# ============================================================
+SEGMENT_DURATION = config.audio.segment_duration
+COPY_AUDIO_STREAM = config.audio.copy_audio_stream
+AUDIO_EXTENSION = config.audio.audio_extension
 
-# The JSON file containing all stations.
-# This keeps stations out of the source code.
+FFMPEG_BINARY = config.ffmpeg.ffmpeg_binary
+FFPROBE_BINARY = config.ffmpeg.ffprobe_binary
+FFMPEG_LOGLEVEL = config.ffmpeg.ffmpeg_loglevel
+HIDE_FFMPEG_BANNER = config.ffmpeg.hide_banner
 
-STATIONS_FILE = BASE_DIR / "stations" / "ghana_stations.json"
+ENABLE_RECONNECT = config.reconnect.enable_reconnect
+INITIAL_RECONNECT_DELAY = config.reconnect.initial_delay
+MAX_RECONNECT_DELAY = config.reconnect.max_delay
+RECONNECT_MULTIPLIER = config.reconnect.multiplier
 
-# ============================================================
-# AUDIO CAPTURE SETTINGS
-# ============================================================
+LOG_LEVEL = config.logging.log_level
+LOG_TO_CONSOLE = config.logging.log_to_console
+LOG_TO_FILE = config.logging.log_to_file
+ROTATE_LOGS_DAILY = config.logging.rotate_daily
+KEEP_LOGS_DAYS = config.logging.keep_days
 
-# Segment duration (seconds)
-
-SEGMENT_DURATION = 600
-
-# Save audio directly without re-encoding.
-# Faster and preserves original stream quality.
-
-COPY_AUDIO_STREAM = True
-
-# Desired audio extension
-
-AUDIO_EXTENSION = "mp3"
-
-# ============================================================
-# FFMPEG CONFIGURATION
-# ============================================================
-
-FFMPEG_BINARY = "ffmpeg"
-
-FFPROBE_BINARY = "ffprobe"
-
-FFMPEG_LOGLEVEL = "warning"
-
-# Hide FFmpeg startup banner
-
-HIDE_FFMPEG_BANNER = True
-
-# ============================================================
-# STREAM RECONNECTION
-# ============================================================
-
-ENABLE_RECONNECT = True
-
-INITIAL_RECONNECT_DELAY = 5
-
-MAX_RECONNECT_DELAY = 60
-
-RECONNECT_MULTIPLIER = 2
-
-# ============================================================
-# THREADING
-# ============================================================
-
-# One recording thread per station
-
-THREAD_PER_STATION = True
-
-MAX_THREADS = multiprocessing.cpu_count() * 2
-
-THREAD_DAEMON = True
-
-# ============================================================
-# FILE VALIDATION
-# ============================================================
-
-VERIFY_FILE_EXISTS = True
-
-VERIFY_NON_ZERO_SIZE = True
-
-VERIFY_WITH_FFPROBE = True
-
-GENERATE_SHA256 = True
-
-# ============================================================
-# METADATA
-# ============================================================
-
-GENERATE_METADATA = True
-
-SAVE_STREAM_INFORMATION = True
-
-SAVE_CAPTURE_STATISTICS = True
-
-SAVE_FFMPEG_VERSION = True
-
-SAVE_SYSTEM_INFORMATION = True
-
-# ============================================================
-# DATASET VERSIONING
-# ============================================================
-
-DATASET_VERSION = "1.0"
-
-DATASET_LICENSE = "Research Only"
-
-DATASET_LANGUAGE = [
-
-    "English",
-
-    "Twi",
-
-    "Ga",
-
-    "Ewe",
-
-]
-
-# ============================================================
-# LOGGING
-# ============================================================
-
-LOG_LEVEL = "INFO"
-
-LOG_TO_CONSOLE = True
-
-LOG_TO_FILE = True
-
-ROTATE_LOGS_DAILY = True
-
-KEEP_LOGS_DAYS = 30
-
-# ============================================================
-# REPORT GENERATION
-# ============================================================
-
-GENERATE_DAILY_REPORT = True
-
-GENERATE_DATASET_MANIFEST = True
-
-GENERATE_CAPTURE_STATISTICS = True
-
-# ============================================================
-# MACHINE LEARNING PIPELINE FLAGS
-# (Reserved for future versions)
-# ============================================================
-
-RUN_DEEP_MUSIC_DETECTOR = False
-
-RUN_SOURCE_SEPARATOR = False
-
-RUN_FINGERPRINT_GENERATOR = False
-
-# ============================================================
-# RANDOMNESS
-# ============================================================
-
-RANDOM_SEED = 42
-
-# ============================================================
-# HELPER FUNCTIONS
-# ============================================================
+DATASET_LICENSE = config.dataset.license
+DATASET_LANGUAGE = config.dataset.languages
+RANDOM_SEED = config.random_seed
 
 def initialize_directories():
-    """
-    Creates every directory required by the framework.
-    """
-
-    for directory in DIRECTORIES:
-        directory.mkdir(parents=True, exist_ok=True)
-
+    config.paths.initialize_directories()
 
 def print_configuration():
-    """
-    Prints the current configuration.
-    Useful for debugging.
-    """
-
     print("=" * 60)
     print(PROJECT_NAME)
     print("=" * 60)
-
     print(f"Version           : {PROJECT_VERSION}")
     print(f"Dataset           : {DATASET_NAME}")
     print(f"Country           : {COUNTRY}")
@@ -265,12 +75,8 @@ def print_configuration():
     print(f"Metadata          : {METADATA_DIR}")
     print(f"Logs              : {LOG_DIR}")
     print(f"Reports           : {REPORT_DIR}")
-
     print("=" * 60)
 
-
 if __name__ == "__main__":
-
     initialize_directories()
-
     print_configuration()
