@@ -126,11 +126,89 @@ All outputs update the matching `GRMS-1.0` JSON record in `storage/metadata/`.
 
 ---
 
-## 4. Directory Hierarchy & Dataset Storage Structure
+## 4. Cloud Model Training & Deployment Workflow (Kaggle & Hugging Face)
+
+Once dataset segments pass QA validation in Step 3, model training (Demucs-v4 source separation and contrastive neural fingerprint encoder) can be offloaded to cloud GPU infrastructure (Kaggle, Hugging Face, or Colab).
+
+```
+   Local Acquisition           Dataset Hub                 Cloud GPU Cluster               Local Pipeline
++--------------------+     +------------------+     +----------------------------+     +------------------+
+| GRAF `storage/raw` | ──► | Hugging Face /   | ──► | Kaggle / Colab (NVIDIA T4) | ──► | `cli.py pipeline`|
+| GRMS Metadata      |     | Kaggle Datasets  |     | PyTorch Model Training     |     | Model Weights    |
++--------------------+     +------------------+     +----------------------------+     +------------------+
+```
+
+### 4.1 Exporting Dataset to Kaggle Datasets
+
+1. Install and configure Kaggle CLI:
+   ```bash
+   pip install kaggle
+   # Ensure ~/.kaggle/kaggle.json contains your API token
+   ```
+
+2. Package validated raw audio and GRMS-1.0 metadata sidecars:
+   ```bash
+   # Initialize Kaggle dataset metadata in storage directory
+   kaggle datasets init -p storage/
+   ```
+
+3. Create and upload dataset to Kaggle:
+   ```bash
+   kaggle datasets create -p storage/ --public
+   ```
+
+4. Attach the uploaded dataset to a Kaggle GPU Notebook (30 hours/week free NVIDIA T4/P100 GPUs) to train Demucs-v4 or the 128-D Neural Audio Fingerprint Encoder.
+
+### 4.2 Publishing & Streaming via Hugging Face Hub
+
+1. Log into Hugging Face CLI:
+   ```bash
+   huggingface-cli login
+   ```
+
+2. Stream or push raw audio & GRMS-1.0 metadata using Python:
+   ```python
+   from datasets import Dataset, Audio
+   from pathlib import Path
+   import json
+
+   raw_dir = Path("storage/raw")
+   meta_dir = Path("storage/metadata")
+
+   records = []
+   for mp3 in raw_dir.glob("*.mp3"):
+       sidecar = meta_dir / f"{mp3.stem}.json"
+       if sidecar.exists():
+           with open(sidecar) as f:
+               meta = json.load(f)
+           records.append({
+               "audio": str(mp3.absolute()),
+               "station_id": meta["station"]["id"],
+               "speech_music_ratio": meta["machine_learning"].get("speech_music_ratio", 1.0),
+               "sha256": meta["file"]["sha256"]
+           })
+
+   ds = Dataset.from_list(records).cast_column("audio", Audio(sampling_rate=44100))
+   ds.push_to_hub("username/ghana-radio-dataset")
+   ```
+
+### 4.3 Downloading Trained Checkpoints back to GRAF
+
+After fine-tuning Demucs-v4 or training the neural fingerprint encoder on Kaggle or Hugging Face:
+1. Download trained checkpoint weights (`.pt` or `.safetensors`) into `graf/pipeline/models/`.
+2. Run local downstream inference and evaluation:
+   ```bash
+   python3 cli.py pipeline
+   ```
+
+---
+
+## 5. Directory Hierarchy & Dataset Storage Structure
 
 ```
 g-radio-acquisition/
 ├── OPERATIONAL_GUIDE.md # This operational guide
+├── RESEARCH_PAPER.md    # Academic research paper draft
 ├── cli.py               # Main Command Line Interface
 ├── main.py              # Entrypoint wrapper script
 ├── config.py            # Top-level configuration wrapper
@@ -159,7 +237,7 @@ g-radio-acquisition/
 
 ---
 
-## 5. Adding Custom Radio Stations
+## 6. Adding Custom Radio Stations
 
 To add new Ghanaian radio streams to the framework, open `stations/ghana_stations.json` and append a new station configuration object:
 
@@ -183,7 +261,7 @@ To add new Ghanaian radio streams to the framework, open `stations/ghana_station
 
 ---
 
-## 6. Advanced Configuration via Environment Variables
+## 7. Advanced Configuration via Environment Variables
 
 All parameters can be overridden at runtime without code changes:
 
@@ -200,10 +278,11 @@ GRAF_BIT_RATE=192000 python3 cli.py record
 
 ---
 
-## 7. Running Unit Tests
+## 8. Running Unit Tests
 
 Run the complete automated test suite to ensure system integrity:
 
 ```bash
 python3 -m unittest discover -s tests -p "test_*.py" -v
 ```
+
