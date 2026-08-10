@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE & OS Metadata
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/
+
+# GRAF Runtime Storage & Generated Data (Ignore outputs, preserve folders)
+storage/raw/*
+!storage/raw/.gitkeep
+
+storage/metadata/*
+!storage/metadata/.gitkeep
+
+storage/logs/*
+!storage/logs/.gitkeep
+
+storage/reports/*
+!storage/reports/.gitkeep
+
+storage/processed/*
+!storage/processed/.gitkeep
+
+storage/annotations/*
+!storage/annotations/.gitkeep
+
+# Temporary / Scratch Files
+*.tmp
+*.bak
+*.swp

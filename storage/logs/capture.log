@@ -9,3 +9,9 @@
 2026-08-05 12:26:21 | INFO     | MainThread      | [Benchmarking] Running benchmark suite 'G-Radio-Eval-v1' on test_audio.mp3
 2026-08-05 12:26:21 | INFO     | MainThread      | Pipeline execution completed successfully for test_audio.mp3
 2026-08-05 12:26:22 | WARNING  | MainThread      | [GRAF-QA] Validation failed for empty.mp3: ['Audio file size is 0 bytes', 'File non-existent or zero byte']
+2026-08-05 15:23:16 | INFO     | MainThread      | [Peace FM] Recording started.
+2026-08-05 15:23:21 | WARNING  | MainThread      | [Peace FM] FFmpeg exited code 8: [https @ 0x7f7932704080] HTTP error 404 Not Found
+[in#0 @ 0x7f79323042c0] Error opening input: Server returned 404 Not Found
+Error opening input file https://stream.zeno.fm/t3q649234bhvv.
+Error opening input files: Server returned 404 Not Found
+
